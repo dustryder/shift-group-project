@@ -1,6 +1,5 @@
 USE devices;
 INSERT INTO device (device_name,status,device_type,os_type,os_version,ram,device_cpu,device_bit,resolution,grade,uuid,acquisition_date) VALUES 
-
 ("Q Bert","Carl","Amazon Fire HD 7","Android","4.5.5","1 GB","Dual-Core 1.5GHz",NULL,"800 x 1280 (216ppi)","Low",NULL,NULL),
 ("Pac Man","available","Chromebook","Windows",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ("Princess Zelda","Sonam","Dell E 6400","Windows",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
