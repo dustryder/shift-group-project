@@ -5,6 +5,7 @@
 # Rodrigo Marcolino, rodrigomarcolino@gmail.com
 # 29/04/2020
 
+from flask import Flask, render_template
 import mysql.connector
 from mysql.connector import Error, errorcode
 from config_db import config
@@ -32,6 +33,6 @@ def close_db_connection(connection):
 from flask import Flask
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return 'Device Vault Launch'
+    return "Device Vault Launch"
