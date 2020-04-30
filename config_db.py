@@ -2,7 +2,7 @@
 
 config = {
   "user":"root",
-  "password":"Gryphon11",
+  "password":"12345",
   "host":"127.0.0.1",
   "database":"Devices",
   "auth_plugin":"mysql_native_password",

@@ -36,12 +36,6 @@ def close_db_connection(connection):
 @app.route("/", methods = ['POST', 'GET'])
 def home():
 
-    if request.method == 'POST':
-
-        device_id = request.form['device_id']
-        employee_id = request.form['employee_id']
-
-
     try:
         connection = get_db_connection()
         mycursor = connection.cursor()
@@ -52,7 +46,27 @@ def home():
         employees = mycursor.fetchall()
 
     except mysql.connector.Error as error:
-        print("Error reading Device table {}".format(error))    
+        print("Error reading Device table {}".format(error))  
+
+    if request.method == 'POST':
+
+        device_id = request.form['device_id']
+        device_id, available = device_id.split(',')
+        employee_id = request.form['employee_id']
+        employee_id, employee_name = employee_id.split(',')
+
+        if available != "available":
+            mycursor.execute(f"UPDATE device SET status = 'available' WHERE device_id = {device_id}")
+        else:
+            mycursor.execute(f"UPDATE device SET status = '{employee_name}' WHERE device_id = {device_id}")
+        connection.commit()
+
+        #We are retrieving the devices/employees again to update the homepage with the changes we've made
+        mycursor.execute("SELECT device_id, device_name, status, device_type, os_type, os_version, grade FROM Device")
+        device_table = mycursor.fetchall()
+
+        mycursor.execute("SELECT employee_id, first_name FROM employee")
+        employees = mycursor.fetchall()
 
     return render_template('hometable.html',device_table=device_table, employees=employees)
         
