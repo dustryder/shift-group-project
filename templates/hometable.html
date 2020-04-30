@@ -1,0 +1,54 @@
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+    
+<H1>List of Devices</H1>
+
+<form method="post" action="/">
+<select name="employee_id">
+{% for employee in employees %}
+  <option value={{ employee[0]|string+","+employee[1]}}>{{ employee[1] }}</option>
+{% endfor %}
+</select>
+
+<table border=1>
+	<tr>
+        <th>Device Name</th>
+        <th>Status</th>
+        <th>Device Type</th>
+        <th>OS Type</th>
+        <th>OS Version</th>
+        <th>Device Grade</th>
+    </tr>
+    
+    {% for device in device_table %}
+    <tr>
+    {% for field in device[1:] %}
+        {% if loop.index == 2 %}
+        <td><button type="submit" name="device_id" value={{ device[0]|string+","+field }}>{{ field }}</button></td>
+        {% else %}
+        <td> {{ field }}</td>
+        {% endif %}
+    {% else %}
+
+    {% endfor %}
+</tr>
+{% endfor %}
+</table>
+<form>
+
+
