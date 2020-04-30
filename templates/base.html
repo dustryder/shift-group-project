@@ -7,8 +7,35 @@
   <title>{% block title %}{% endblock %}</title>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  </head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
+    <div class="container">
+      <a href="{{ url_for('home') }}" class="navbar-brand ">
+        <img src="{{ url_for('static', filename='images/logo2_bg-black-removebg-preview.png') }}" height="40px">
+      </a>
+      
+      
+      <button class="navbar-toggler " type="button"
+              data-toggle="collapse" data-target="#navbarResponsive"
+              aria-controls="navbarResponsive" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse " id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item {{ 'active' if active_page == 'hometable' else '' }}">
+            <a href="{{ url_for('home') }}" class="nav-link">Home Table</a>
+          </li>
+          <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
+            <a href="#" class="nav-link">PlaceHoder</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   {% block content %}{% endblock %}
 
