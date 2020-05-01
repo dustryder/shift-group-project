@@ -1,0 +1,36 @@
+<style>
+	
+body {
+	text-align:center;
+	font-family:Helvetica;
+}
+label {
+    font-weight: bold;
+}
+	
+<!-- graduated steel blue background -->
+#grad1 {
+  height: cover;
+  background-color: #3a4563; 
+  <!--For browsers that do not support gradients-->
+  background-image: linear-gradient(to right, #3a4563, #58627b); 
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+	box-sizing: content-box;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+</style>
