@@ -11,6 +11,11 @@
 </head>
 
 <body>
+  <div class="jumbotron text-center" style="background-color:rgb(110, 153, 153)">
+  <h1>You have reached the Device Vault</h1>
+  <p>Here is the current status of all devices</p>
+<p> Click on the device you wish to borrow to access hire information </p>  
+</div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
     <div class="container">
       <a href="{{ url_for('home') }}" class="navbar-brand ">
@@ -27,11 +32,14 @@
       <div class="collapse navbar-collapse " id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item {{ 'active' if active_page == 'hometable' else '' }}">
-            <a href="{{ url_for('home') }}" class="nav-link">Home Table</a>
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
           </li>
           <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
-            <a href="#" class="nav-link">PlaceHoder</a>
+            <a href="#" class="nav-link">Search</a>
           </li>
+          <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
+            <a href="#" class="nav-link">Admin</a>
+        </li>
         </ul>
       </div>
     </div>
