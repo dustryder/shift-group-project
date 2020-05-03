@@ -5,14 +5,15 @@
 # Rodrigo Marcolino, rodrigomarcolino@gmail.com
 # 29/04/2020
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import mysql.connector
 from mysql.connector import Error, errorcode
 from config_db import config
 
 from flask import Flask
 app = Flask(__name__)
-
+app.config["SECRET_KEY"] = 'G04ps8f_7Wm3kRyDc480Dg8884'
+#secret key needed for securely signing the session cookie.
 
 #Function for get Database connection
 def get_db_connection():
@@ -31,8 +32,12 @@ def close_db_connection(connection):
     except mysql.connector.Error as error :
         print("Failed to close database connection {}".format(error))
 
+#function to remember user    
+@app.before_request
+def make_session_permanent():
+    session.permanent = True 
 
-#Function to render basi device table on homepage of web application
+#Function to render basic device table on homepage of web application
 @app.route("/", methods = ['POST', 'GET'])
 def home():
 
@@ -53,6 +58,7 @@ def home():
         device_id = request.form['device_id']
         device_id, available = device_id.split(',')
         employee_id = request.form['employee_id']
+        session['employee_id'] = employee_id
         employee_id, employee_name = employee_id.split(',')
 
         if available != "available":
