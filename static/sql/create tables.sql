@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS Employee (
 	employee_id INT PRIMARY KEY AUTO_INCREMENT,
 	first_name VARCHAR(30),
 	last_name VARCHAR(30),
-	location VARCHAR(30)
+	location VARCHAR(30),
+    permissions INT
 ) engine = InnoDB;
 
 CREATE TABLE IF NOT EXISTS DeviceLoan (
