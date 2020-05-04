@@ -11,6 +11,22 @@
 </head>
 
 <body>
+
+  {% if permission == 0 %}
+  <h1>Please Login</h1>
+  {% endif %}
+  
+  {% if permission == 1 %}
+  <h1>Hello, Peon</h1>
+  {% endif %}
+
+  {% if permission == 5 %}
+  <h1>Hello, Manager</h1>
+  {% endif %}
+
+  {% if permission == 10 %}
+  <h1>Hello Administrator</h1>
+  {% endif %}
   <div class="jumbotron text-center" style="background-color:rgb(110, 153, 153)">
   <h1>You have reached the Device Vault</h1>
   <p>Here is the current status of all devices</p>

@@ -41,6 +41,8 @@ def make_session_permanent():
 @app.route("/", methods = ['POST', 'GET'])
 def home():
 
+    permission = 0
+
     try:
         connection = get_db_connection()
         mycursor = connection.cursor()
@@ -74,7 +76,11 @@ def home():
         mycursor.execute("SELECT employee_id, first_name FROM employee")
         employees = mycursor.fetchall()
 
-    return render_template('hometable.html',device_table=device_table, employees=employees)
+        query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
+        mycursor.execute(query)
+        permission = mycursor.fetchall()[0][0]
+
+    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission)
         
 if (__name__) == ('__main__'):
     app.run(debug=True)
