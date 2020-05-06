@@ -1,11 +1,17 @@
 body { padding-top: 70px; }
 
-div.table-title {
+#DeviceTable {
   display: block;
  margin: auto;
  max-width: 600px;
  padding:5px;
  width: 100%;
+}
+
+.login-select {
+	max-width: 600px;
+	margin: auto;
+	width: 100%;
 }
 
 tr:hover td {

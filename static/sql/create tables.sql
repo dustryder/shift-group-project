@@ -4,7 +4,6 @@ USE Devices;
 CREATE TABLE IF NOT EXISTS Device (
 	device_id INT PRIMARY KEY AUTO_INCREMENT,
 	device_name VARCHAR(30),
-	status VARCHAR(30),
 	device_type VARCHAR(30),
 	os_type VARCHAR(10),
 	os_version VARCHAR(10),
@@ -26,11 +25,10 @@ CREATE TABLE IF NOT EXISTS Employee (
 ) engine = InnoDB;
 
 CREATE TABLE IF NOT EXISTS DeviceLoan (
-	device_id INT,
+	device_id INT PRIMARY KEY,
 	employee_id INT,
 	loan_date DATE,
 	duration VARCHAR(30),
 	FOREIGN KEY (device_id) REFERENCES Device(device_id),
-	FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
-	PRIMARY KEY (device_id, employee_id)
+	FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
 ) engine = InnoDB;

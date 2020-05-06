@@ -12,7 +12,7 @@
     </div>
 <div>
 <form class="form-group"method="post" action="/">
-<select class="form-control" name="employee_id" id="employee_id">
+<select class="form-control login-select" name="employee_id" id="employee_id">
 {% for employee in employees %}
   <option value={{ employee[0]|string+","+employee[1]}}>{{ employee[1] }}</option>
 {% endfor %}
@@ -35,7 +35,7 @@
     <tr>
     {% for field in device[1:] %}
         {% if loop.index == 2 %}
-        <td class="text-left"><button class="btn btn-info  btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field if field else device[0]|string+",available" }}>{{ field }}</button></td>
+        <td class="text-left"><button class="btn btn-info  btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field if field else device[0]|string+",available" }}>{{ field if field != None else "available" }}</button></td>
         {% else %}
         <td class="text-left"> {{ field }}</td>
         {% endif %}
