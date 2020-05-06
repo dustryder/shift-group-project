@@ -32,7 +32,7 @@
     <tr>
     {% for field in device[1:] %}
         {% if loop.index == 2 %}
-        <td class="text-left"><button class="btn btn-info  btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field }}>{{ field }}</button></td>
+        <td class="text-left"><button class="btn btn-info  btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field if field else device[0]|string+",available" }}>{{ field }}</button></td>
         {% else %}
         <td class="text-left"> {{ field }}</td>
         {% endif %}

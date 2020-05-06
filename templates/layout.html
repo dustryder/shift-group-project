@@ -1,0 +1,102 @@
+{% import 'admin/layout.html' as layout with context -%}
+{% extends 'admin/base.html' %}
+
+{% block head_tail %}
+  {{ super() }}
+  <style>
+
+  	body {
+  		padding-top: 0;
+  	}
+
+	.admin-nav {
+		width: 100%;
+	}
+
+  	.admin-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		background-color: #343a40;
+		padding-top: 13px;
+		padding-bottom: 13px;
+		top: 0;
+		left: 0;
+		right: 0;
+  	}
+
+  	.admin-item {
+  		list-style-type: none;
+  	}
+
+  	.admin-menu {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+  	}
+
+  	.admin-link {
+	  display: block;
+	  padding: 0.5rem 1rem;
+	  text-decoration: none;
+	  color: rgba(255,255,255,.5);
+	}
+
+	.admin-link:hover {
+	  color: rgba(255,255,255,.75);
+	  text-decoration: none;
+	}
+
+	.admin-link:visited {
+	  color: rgba(255,255,255,.5);
+	}
+
+	.admin-brand {
+		padding-left: 85px;
+	}
+
+	.last-item {
+		padding-right: 100px;
+	}
+  	
+  </style>
+{% endblock %}
+
+{% block page_body %}
+<nav class="admin-nav">
+    <ul class="admin-container">
+
+      <div>
+	  <a href="{{ url_for('home') }}" class="admin-brand">
+	      <img src="{{ url_for('static', filename='images/logo2_bg-black-removebg-preview.png') }}" height="40px">
+	  </a>
+	  </div>
+
+	  <div class="admin-menu">
+      <li class="admin-item {{ 'active' if active_page == 'hometable' else '' }}">
+        <a href="{{ url_for('home') }}" class="admin-link">Home</a>
+      </li>
+
+      <li class="admin-item {{ 'active' if active_page == 'new_item' else '' }}">
+        <a href="/admin/device" class="admin-link">Devices</a>
+      </li>
+      <li class="admin-item last-item {{ 'active' if active_page == 'new_item' else '' }}">
+        <a href="/admin/employee" class="admin-link">Employees</a>
+      </li>
+      </div>
+
+    </ul>
+</nav>
+<div class="container{%if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %} admin-class">
+
+  {% block messages %}
+  {{ layout.messages() }}
+  {% endblock %}
+
+  {# store the jinja2 context for form_rules rendering logic #}
+  {% set render_ctx = h.resolve_ctx() %}
+
+  {% block body %}{% endblock %}
+</div>
+{% endblock %}
