@@ -8,16 +8,16 @@
 from flask import Flask, render_template, request, session
 import mysql.connector
 from mysql.connector import Error, errorcode
-from config_db import config
+from config_db import config, DATABASE_URI, SECRET_KEY
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin.contrib.sqla import ModelView
 
 from flask import Flask
 app = Flask(__name__)
-app.config["SECRET_KEY"] = 'G04ps8f_7Wm3kRyDc480Dg8884'
+app.config["SECRET_KEY"] = SECRET_KEY
 admin = Admin(app, base_template='layout.html', template_mode='bootstrap3')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Gryphon11@localhost/devices'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 db = SQLAlchemy(app)
 
 class Device(db.Model):
@@ -82,8 +82,6 @@ def make_session_permanent():
 @app.route("/", methods = ['POST', 'GET'])
 def home():
 
-    permission = 10
-
     try:
         connection = get_db_connection()
         mycursor = connection.cursor()
@@ -96,13 +94,23 @@ def home():
     except mysql.connector.Error as error:
         print("Error reading Device table {}".format(error))  
 
+    #Try to retrieve stored employee_id from session. If one has not been stored, return the employee id of a known plebeian
+    employee_id = session.get('employee_id', 1)
+    #Retrieve the permissions level of the employee_id we just received
+    query = f"SELECT permissions FROM employee WHERE employee_id = {employee_id}"
+    mycursor.execute(query)
+    #Set permissions, ready to be sent to the template
+    permission = mycursor.fetchone()[0]
+
     if request.method == 'POST':
 
         device_id = request.form['device_id']
         device_id, available = device_id.split(',')
         employee_id = request.form['employee_id']
-        session['employee_id'] = employee_id
+        print(employee_id)
         employee_id, employee_name = employee_id.split(',')
+        #Store the employee id of the person trying to borrow or return a device
+        session['employee_id'] = employee_id
 
         if available != "available":
             query = f"DELETE FROM deviceloan WHERE device_id = {device_id}"
@@ -119,11 +127,12 @@ def home():
         mycursor.execute("SELECT employee_id, first_name FROM employee")
         employees = mycursor.fetchall()
 
+        #Updating the permissions level so the page reflects the new permissions level of the new employee
         query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
         mycursor.execute(query)
-        permission = mycursor.fetchall()[0][0]
+        permission = mycursor.fetchone()[0]
 
-    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission)
+    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
         
 if (__name__) == ('__main__'):
     app.run(debug=True)

@@ -14,7 +14,7 @@
 <form class="form-group"method="post" action="/">
 <select class="form-control login-select" name="employee_id" id="employee_id">
 {% for employee in employees %}
-  <option value={{ employee[0]|string+","+employee[1]}}>{{ employee[1] }}</option>
+  <option value={{ employee[0]|string+","+employee[1] }} {{"selected= 'selected'" if employee[0]|string == employee_id else '' }} >{{ employee[1] }}</option>
 {% endfor %}
 </select>
 </div class="align-self-center" > 
