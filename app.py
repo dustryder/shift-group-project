@@ -73,10 +73,10 @@ def close_db_connection(connection):
     except mysql.connector.Error as error :
         print("Failed to close database connection {}".format(error))
 
-#function to remember user    
+#session functions to remember user; still needs work
 @app.before_request
 def make_session_permanent():
-    session.permanent = True 
+   session.permanent = True 
 
 #Function to render basic device table on homepage of web application
 @app.route("/", methods = ['POST', 'GET'])

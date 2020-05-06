@@ -4,9 +4,12 @@
 {% block content %}
 
 
-<div class="table-title"> 
-<H1>List of Devices</H1>
-
+<div class="container">
+    <h2> Search Device Table</h2>
+    <p> Search for device information here:</p>
+    <input class="form-control" id="myInput"  type="text" placeholder="Start typing...">
+    <br>
+    </div>
 <div>
 <form class="form-group"method="post" action="/">
 <select class="form-control" name="employee_id" id="employee_id">
@@ -15,7 +18,7 @@
 {% endfor %}
 </select>
 </div class="align-self-center" > 
-<table class="table table-fixed">
+<table id="DeviceTable" class= "table table-fixed">
     <thead class="thead-dark">
 	<tr>
         <th>Device Name</th>
@@ -43,11 +46,18 @@
 {% endfor %}
 </tbody>
 </table>
-<form>
-
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#DeviceTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
 {% endblock %}
 {% block javascript %}
-   
 {% endblock %}
