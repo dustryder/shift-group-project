@@ -21,10 +21,6 @@
 } );
 
 </script>
-
-  {% if permission == 0 %}
-  <h1>Please Login</h1>
-  {% endif %}
   
   {% if permission == 1 %}
   <h1>Hello, Peon</h1>
@@ -59,9 +55,6 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item {{ 'active' if active_page == 'hometable' else '' }}">
             <a href="{{ url_for('home') }}" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
-            <a href="#" class="nav-link">Search</a>
           </li>
           {% if permission >= 10 %}
           <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
