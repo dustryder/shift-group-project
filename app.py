@@ -17,11 +17,9 @@ from flask import Flask
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 admin = Admin(app, base_template='layout.html', template_mode='bootstrap3')
-<<<<<<< HEAD
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:bellydance32@localhost/devices'
-=======
+
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
->>>>>>> b156ed7d6194b55dc457a8f7de0458dc9d407634
+
 db = SQLAlchemy(app)
 
 class Device(db.Model):
@@ -113,7 +111,6 @@ def home():
         device_id = request.form['device_id']
         device_id, available = device_id.split(',')
         employee_id = request.form['employee_id']
-        print(employee_id)
         employee_id, employee_name = employee_id.split(',')
         #Store the employee id of the person trying to borrow or return a device
         session['employee_id'] = employee_id
