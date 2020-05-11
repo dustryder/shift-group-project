@@ -18,7 +18,7 @@
 {% endfor %}
 </select>
 </div class="align-self-center" > 
-<table id="DeviceTable" class= "table table-fixed">
+<table class= "table table-fixed">
     <thead class="thead-dark">
 	<tr>
         <th>Device Name</th>
@@ -32,7 +32,7 @@
     </thead> 
     
     {% for device in device_table %}
-    <tbody class="table-hover">
+    <tbody id="DeviceTable" class="table-hover">
     <tr>
     {% for field in device[1:] %}
         {% if loop.index == 2 %}

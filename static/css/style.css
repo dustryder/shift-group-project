@@ -1,7 +1,7 @@
 body { padding-top: 70px; }
 
-#DeviceTable {
-  display: block;
+ table {
+display: block;
  margin: auto;
  max-width: 600px;
  padding:5px;
