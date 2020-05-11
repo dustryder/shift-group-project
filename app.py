@@ -97,7 +97,7 @@ def home():
         mycursor = connection.cursor()
         #mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade FROM devicestatus ORDER BY device_id")
         #add device location to homepage table
-        mycursor.execute("SELECT device.device_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+        mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
         device_table = mycursor.fetchall()
 
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")

@@ -17,6 +17,7 @@
   <option value={{ employee[0]|string+","+employee[1]+","+employee[2]|string }} {{"selected= 'selected'" if employee[0]|string == employee_id|string else '' }} >{{ employee[1] }}</option>
 {% endfor %}
 </select>
+<p>{{ employee_id }}</p>
 </div class="align-self-center" > 
 <table class= "table table-fixed">
     <thead class="thead-dark">
@@ -34,12 +35,22 @@
     {% for device in device_table %}
     <tbody id="DeviceTable" class="table-hover">
     <tr>
-    {% for field in device[1:] %}
+    {% for field in device[2:] %}
+
         {% if loop.index == 2 %}
-        <td class="text-left"><button class="btn btn-info  btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field if field else device[0]|string+",available" }}>{{ field if field != None else "available" }}</button></td>
+
+            {% if device[1]|string == employee_id|string %}
+                <td hidden-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field }}>Return</button></td>
+            {% elif field == None %}
+                <td class="text-left"><button class="btn btn-block btn-success" type="submit" name="device_id" value={{ device[0]|string+",available" }}>Borrow</button></td>
+            {% else %}
+                <td hidden-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left">{{ field }}</td>
+            {% endif %}
+
         {% else %}
-        <td class="text-left"> {{ field }}</td>
+        <td class="text-left">{{ field }}</td>
         {% endif %}
+
     {% else %}
 
     {% endfor %}
