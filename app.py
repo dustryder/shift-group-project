@@ -5,7 +5,7 @@
 # Rodrigo Marcolino, rodrigomarcolino@gmail.com
 # 29/04/2020
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 import mysql.connector
 from mysql.connector import Error, errorcode
 from config_db import config, DATABASE_URI, SECRET_KEY
@@ -80,6 +80,14 @@ def close_db_connection(connection):
 def make_session_permanent():
    session.permanent = True 
 
+@app.route("/login", methods = ['POST'])
+def login():
+
+    employee = request.get_json(force=True)
+    session['employee_id'] = int(employee['employee_id'])
+    return redirect("/")
+
+
 #Function to render basic device table on homepage of web application
 @app.route("/", methods = ['POST', 'GET'])
 def home():
@@ -92,7 +100,7 @@ def home():
         mycursor.execute("SELECT device.device_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
         device_table = mycursor.fetchall()
 
-        mycursor.execute("SELECT employee_id, first_name FROM employee")
+        mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()
 
     except mysql.connector.Error as error:
@@ -108,19 +116,10 @@ def home():
 
     if request.method == 'POST':
 
-        try:
-            employee_id = request.form['employee_id']
-            employee_id, employee_name = employee_id.split(',')
-            device_id = request.form['device_id']
-            device_id, available = device_id.split(',')
-        except:
-            data = request.get_json(force=True)
-            employee_id, employee_name = data['employee_id'].split(',')
-            query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
-            mycursor.execute(query)
-            permission = mycursor.fetchone()[0]
-            session['employee_id'] = employee_id
-            return render_template('hometable.html', device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
+        device_id = request.form['device_id']
+        device_id, available = device_id.split(',')
+        employee_id = request.form['employee_id']
+        employee_id, employee_name, _ = employee_id.split(',')
         #Store the employee id of the person trying to borrow or return a device
         session['employee_id'] = employee_id
 
@@ -136,8 +135,12 @@ def home():
         mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM devicestatus ORDER BY device_id")
         device_table = mycursor.fetchall()
 
-        mycursor.execute("SELECT employee_id, first_name FROM employee")
+        mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()
+
+        query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
+        mycursor.execute(query)
+        permission = mycursor.fetchone()[0]
 
     return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
         

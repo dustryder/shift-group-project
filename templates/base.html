@@ -44,11 +44,8 @@
           <li class="nav-item {{ 'active' if active_page == 'hometable' else '' }}">
             <a href="{{ url_for('home') }}" class="nav-link">Home</a>
           </li>
-          {% if permission >= 10 %}
           <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
-            <a href="/admin" class="nav-link">Admin</a>
-          </li>
-          {% endif %}
+            <a href="/admin" class="nav-link">{% if permission >= 10 %}Admin{% endif %}</a>
         </ul>
       </div>
     </div>
