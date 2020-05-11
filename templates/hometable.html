@@ -9,15 +9,14 @@
     <p> Search for device information here:</p>
     <input class="form-control" id="myInput"  type="text" placeholder="Start typing...">
     <br>
-    </div>
-<div>
+</div>
+
 <form class="form-group"method="post" action="/">
 <select class="form-control login-select" name="employee_id" id="employee_id">
 {% for employee in employees %}
   <option value={{ employee[0]|string+","+employee[1]+","+employee[2]|string }} {{"selected= 'selected'" if employee[0]|string == employee_id|string else '' }} >{{ employee[1] }}</option>
 {% endfor %}
 </select>
-<p>{{ employee_id }}</p>
 </div class="align-self-center" > 
 <table class= "table table-fixed">
     <thead class="thead-dark">
@@ -58,7 +57,8 @@
 {% endfor %}
 </tbody>
 </table>
-</div>
+</form>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){

@@ -28,7 +28,6 @@ window.addEventListener('load', () => {
 		}
 
 
-
 		let data = {'employee_id': item[0]};
 
 		fetch("/login", {
