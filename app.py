@@ -108,10 +108,19 @@ def home():
 
     if request.method == 'POST':
 
-        device_id = request.form['device_id']
-        device_id, available = device_id.split(',')
-        employee_id = request.form['employee_id']
-        employee_id, employee_name = employee_id.split(',')
+        try:
+            employee_id = request.form['employee_id']
+            employee_id, employee_name = employee_id.split(',')
+            device_id = request.form['device_id']
+            device_id, available = device_id.split(',')
+        except:
+            data = request.get_json(force=True)
+            employee_id, employee_name = data['employee_id'].split(',')
+            query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
+            mycursor.execute(query)
+            permission = mycursor.fetchone()[0]
+            session['employee_id'] = employee_id
+            return render_template('hometable.html', device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
         #Store the employee id of the person trying to borrow or return a device
         session['employee_id'] = employee_id
 
@@ -129,11 +138,6 @@ def home():
 
         mycursor.execute("SELECT employee_id, first_name FROM employee")
         employees = mycursor.fetchall()
-
-        #Updating the permissions level so the page reflects the new permissions level of the new employee
-        query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
-        mycursor.execute(query)
-        permission = mycursor.fetchone()[0]
 
     return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
         
