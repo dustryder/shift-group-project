@@ -1,6 +1,6 @@
 #from app import app
 
-PASSWORD = '12345'
+PASSWORD = 'Gryphon11'
 
 config = {
   "user":"root",
