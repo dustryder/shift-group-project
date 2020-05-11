@@ -9,8 +9,8 @@
     <p> Search for device information here:</p>
     <input class="form-control" id="myInput"  type="text" placeholder="Start typing...">
     <br>
-    </div>
-<div>
+</div>
+
 <form class="form-group"method="post" action="/">
 <select class="form-control login-select" name="employee_id" id="employee_id">
 {% for employee in employees %}
@@ -34,12 +34,22 @@
     {% for device in device_table %}
     <tbody id="DeviceTable" class="table-hover">
     <tr>
-    {% for field in device[1:] %}
+    {% for field in device[2:] %}
+
         {% if loop.index == 2 %}
-        <td class="text-left"><button class="btn btn-info  btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field if field else device[0]|string+",available" }}>{{ field if field != None else "available" }}</button></td>
+
+            {% if device[1]|string == employee_id|string %}
+                <td hidden-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field }}>Return</button></td>
+            {% elif field == None %}
+                <td class="text-left"><button class="btn btn-block btn-success" type="submit" name="device_id" value={{ device[0]|string+",available" }}>Borrow</button></td>
+            {% else %}
+                <td hidden-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left">{{ field }}</td>
+            {% endif %}
+
         {% else %}
-        <td class="text-left"> {{ field }}</td>
+        <td class="text-left">{{ field }}</td>
         {% endif %}
+
     {% else %}
 
     {% endfor %}
@@ -47,7 +57,8 @@
 {% endfor %}
 </tbody>
 </table>
-</div>
+</form>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){

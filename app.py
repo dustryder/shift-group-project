@@ -95,9 +95,15 @@ def home():
     try:
         connection = get_db_connection()
         mycursor = connection.cursor()
+<<<<<<< HEAD
         
         #add device location to homepage table, # add DeviceVault as default location for unassigned devices 
         mycursor.execute("SELECT device.device_id, device_name, first_name, device_type,os_type, os_version, grade, IFNULL(Location, 'DeviceVault') AS Location FROM Device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+=======
+        #mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade FROM devicestatus ORDER BY device_id")
+        #add device location to homepage table
+        mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+>>>>>>> 9473503104dce843ae3a456b0a13b81503982c0c
         device_table = mycursor.fetchall()
 
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
@@ -133,7 +139,7 @@ def home():
         connection.commit()
 
         #We are retrieving the devices/employees again to update the homepage with the changes we've made
-        mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM devicestatus ORDER BY device_id")
+        mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
         device_table = mycursor.fetchall()
 
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
