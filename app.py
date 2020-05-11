@@ -95,13 +95,14 @@ def home():
     try:
         connection = get_db_connection()
         mycursor = connection.cursor()
-        #mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade FROM devicestatus ORDER BY device_id")
-        #add device location to homepage table
-        mycursor.execute("SELECT device.device_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+        
+        #add device location to homepage table, # add DeviceVault as default location for unassigned devices 
+        mycursor.execute("SELECT device.device_id, device_name, first_name, device_type,os_type, os_version, grade, IFNULL(Location, 'DeviceVault') AS Location FROM Device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
         device_table = mycursor.fetchall()
 
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()
+        
 
     except mysql.connector.Error as error:
         print("Error reading Device table {}".format(error))  
@@ -138,9 +139,14 @@ def home():
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()
 
+        #add device location, DeviceVault as default location for unassigned devices 
+        mycursor.execute("SELECT device.device_id, device_name, first_name, device_type,os_type, os_version, grade, IFNULL(Location, 'DeviceVault') AS Location FROM Device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+        device_table = mycursor.fetchall()
+
         query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
         mycursor.execute(query)
         permission = mycursor.fetchone()[0]
+        
 
     return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
         
