@@ -26,15 +26,15 @@ class Device(db.Model):
     __tablename__ = 'device'
 
     device_id = db.Column(db.INTEGER, primary_key=True)
-    device_name = db.Column(db.String(30))
+    device_name = db.Column(db.String(30), unique=True)
     device_type = db.Column(db.String(30))
-    os_type = db.Column(db.String(10))
+    os_type = db.Column(db.Enum('Windows', 'Android', 'IOS', 'VR'))
     os_version = db.Column(db.String(10))
     ram = db.Column(db.String(10))
     device_cpu = db.Column(db.String(50))
-    device_bit = db.Column(db.CHAR(2))
+    device_bit = db.Column(db.Enum('32', '64'))
     resolution = db.Column(db.String(30))
-    grade = db.Column(db.String(10))
+    grade = db.Column(db.Enum('Obsolete', 'Low', 'Medium', 'Low - Mid', 'High', 'Mid - High'))
     uuid = db.Column(db.String(50))
     acquisition_date = db.Column(db.Date)
 
@@ -45,16 +45,11 @@ class Employee(db.Model):
     employee_id = db.Column(db.INTEGER, primary_key=True)
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
-    location = db.Column(db.String(30))
+    location = db.Column(db.Enum('Office 1', 'Office 2'))
     permissions = db.Column(db.INTEGER)
 
-class UserView(ModelView):
-
-    create_modal = True
-    edit_modal = True
-
-admin.add_view(UserView(Device, db.session))
-admin.add_view(UserView(Employee, db.session))
+admin.add_view(ModelView(Device, db.session))
+admin.add_view(ModelView(Employee, db.session))
 
 #secret key needed for securely signing the session cookie.
 
