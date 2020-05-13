@@ -1,59 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>{% block title %}{% endblock %}</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/b-1.6.1/sp-1.0.1/datatables.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+          var overdue_devices = {{ overdue_devices }}
+    </script>
+  </head>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<!-- DataTables links -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/b-1.6.1/sp-1.0.1/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/b-1.6.1/sp-1.0.1/datatables.min.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-
-<body>
-<script>
-  $(document).ready( function () {
-  var table = $('#DeviceTable').DataTable();
-} );
-
-</script>
-  <div class="jumbotron text-center" style="background-color:rgb(110, 153, 153)">
-  <h1>You have reached the Device Vault</h1>
-  <p>Here is the current status of all devices</p>
-<p> Click on the device you wish to borrow to access hire information </p>  
-</div>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
-    <div class="container">
-      <a href="{{ url_for('home') }}" class="navbar-brand ">
-        <img src="{{ url_for('static', filename='images/logo2_bg-black-removebg-preview.png') }}" height="40px">
-      </a>
-      
-      
-      <button class="navbar-toggler " type="button"
-              data-toggle="collapse" data-target="#navbarResponsive"
-              aria-controls="navbarResponsive" aria-expanded="false"
-              aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse " id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item {{ 'active' if active_page == 'hometable' else '' }}">
-            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
-            <a href="/admin" class="nav-link">{% if permission >= 10 %}Admin{% endif %}</a>
-        </ul>
+  <body>
+      <div class="jumbotron text-center" style="background-color:rgb(110, 153, 153)">
+          <h1>You have reached the Device Vault</h1>
+          <p>Here is the current status of all devices</p>
+          <p> Click on the device you wish to borrow to access hire information </p>
       </div>
-    </div>
-  </nav>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
+          <div class="container">
+              <a href="{{ url_for('home') }}" class="navbar-brand ">
+                  <img src="{{ url_for('static', filename='images/logo2_bg-black-removebg-preview.png') }}" height="40px">
+              </a>
+              <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse " id="navbarResponsive">
+                  <ul class="navbar-nav ml-auto">
+                      <li class="nav-item {{ 'active' if active_page == 'hometable' else '' }}">
+                          <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                      </li>
+                      <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
+                          <a href="/admin" class="nav-link">{% if permission >= 10 %}Admin{% endif %}</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
+      <!-- Button trigger modal -->
+      {% block content %}{% endblock %}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/b-1.6.1/sp-1.0.1/datatables.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment.min.js"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
 
-  {% block content %}{% endblock %}
- 
-{% block javascript %}{% endblock %}
-<script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
-
-</body>
 </html>

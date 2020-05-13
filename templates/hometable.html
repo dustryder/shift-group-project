@@ -12,11 +12,13 @@
 </div>
 
 <form class="form-group"method="post" action="/">
+<div class="row justify-content-center">
 <select class="form-control login-select" name="employee_id" id="employee_id">
 {% for employee in employees %}
   <option value={{ employee[0]|string+","+employee[1]+","+employee[2]|string }} {{"selected= 'selected'" if employee[0]|string == employee_id|string else '' }} >{{ employee[1] }}</option>
 {% endfor %}
 </select>
+</div>
 </div class="align-self-center" > 
 <table class= "table table-fixed">
     <thead class="thead-dark">
@@ -33,17 +35,17 @@
     
     {% for device in device_table %}
     <tbody id="DeviceTable" class="table-hover">
-    <tr>
+    <tr hidden-device-id = {{ device[0] }} {% if device[0] in overdue_devices and permission >= 5 %} class="table-danger" {% endif %}>
     {% for field in device[2:] %}
 
         {% if loop.index == 2 %}
 
             {% if device[1]|string == employee_id|string %}
-                <td hidden-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field }}>Return</button></td>
+                <td hidden-employee-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field }}>Return</button></td>
             {% elif field == None %}
                 <td class="text-left"><button class="btn btn-block btn-success" type="submit" name="device_id" value={{ device[0]|string+",available" }}>Borrow</button></td>
             {% else %}
-                <td hidden-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left">{{ field }}</td>
+                <td hidden-employee-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left">{{ field }}</td>
             {% endif %}
 
         {% else %}
@@ -59,17 +61,45 @@
 </table>
 </form>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#DeviceTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
-{% endblock %}
-{% block javascript %}
+<div class="modal fade" id="deviceInfoModal" tabindex="-1" role="dialog" aria-labelledby="deviceInfoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deviceInfoLabel">Device Information</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul id="deviceInformationBody">
+            
+        </ul>
+      </div>
+      <div id="historyTableContainer">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deviceInfoLabel">Device History</h5>
+      </div>
+      <div class="modal-body">
+          <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>Device Name</th>
+                <th>Employee Name</th>
+                <th>Loan Start</th>
+                <th>Loan End</th>
+                <th>Date Returned</th>
+            </tr>
+            </thead> 
+            <tbody class="table-hover" id="historyTableBody">
+            </tbody>
+              
+          </table>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

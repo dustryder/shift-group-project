@@ -5,7 +5,7 @@
 # Rodrigo Marcolino, rodrigomarcolino@gmail.com
 # 29/04/2020
 
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, jsonify
 import mysql.connector
 from mysql.connector import Error, errorcode
 from config_db import config, DATABASE_URI, SECRET_KEY
@@ -75,13 +75,36 @@ def close_db_connection(connection):
 def make_session_permanent():
    session.permanent = True 
 
+@app.route("/device-history", methods = ['GET', 'POST'])
+def history():
+
+    connection = get_db_connection()
+    mycursor = connection.cursor()
+
+    if request.method == 'POST':
+        device = request.get_json(force=True)
+        device_id = device['device_id']
+
+        query = f"SELECT * FROM devicehistory WHERE device_id = %s ORDER BY returned_date DESC"
+        mycursor.execute(query,(device_id,))
+
+        history = mycursor.fetchall()
+        history = [attribute[1:] for attribute in history]
+
+        query = f"SELECT * FROM deviceinfo WHERE device_id = %s"
+        mycursor.execute(query, (device_id,))
+
+        info = mycursor.fetchall()
+        info = [attribute[1:] for attribute in info]
+
+    return jsonify([history, info]);
+
 @app.route("/login", methods = ['POST'])
 def login():
 
     employee = request.get_json(force=True)
     session['employee_id'] = int(employee['employee_id'])
     return redirect("/")
-
 
 #Function to render basic device table on homepage of web application
 @app.route("/", methods = ['POST', 'GET'])
@@ -92,8 +115,9 @@ def home():
         mycursor = connection.cursor()
         
         #add device location to homepage table, # add DeviceVault as default location for unassigned devices 
-        mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, IFNULL(Location, 'DeviceVault') AS Location FROM Device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+        query = "SELECT * FROM DeviceTable "
 
+        mycursor.execute(query)
         #mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade FROM devicestatus ORDER BY device_id")
         #add device location to homepage table
         #mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
@@ -140,15 +164,20 @@ def home():
         employees = mycursor.fetchall()
 
         #add device location, DeviceVault as default location for unassigned devices 
-        mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, IFNULL(Location, 'DeviceVault') AS Location FROM Device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
+        query = "SELECT * FROM DeviceTable"
+        mycursor.execute(query)
         device_table = mycursor.fetchall()
 
         query = f"SELECT permissions FROM employee WHERE employee_id = '{employee_id}'"
         mycursor.execute(query)
         permission = mycursor.fetchone()[0]
+
+    query = "SELECT device_id FROM deviceloan WHERE returned_date IS NULL AND loan_end < NOW()"
+    mycursor.execute(query)
+    overdue_devices = [x[0] for x in mycursor.fetchall()]
+        
+    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id, overdue_devices=overdue_devices)
         
 
-    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id)
-        
 if (__name__) == ('__main__'):
     app.run(debug=True)
