@@ -115,7 +115,7 @@ def home():
         mycursor = connection.cursor()
         
         #add device location to homepage table, # add DeviceVault as default location for unassigned devices 
-        query = "SELECT * FROM DeviceTable "
+        query = "SELECT * FROM devicetable "
 
         mycursor.execute(query)
         #mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade FROM devicestatus ORDER BY device_id")
@@ -164,7 +164,7 @@ def home():
         employees = mycursor.fetchall()
 
         #add device location, DeviceVault as default location for unassigned devices 
-        query = "SELECT * FROM DeviceTable"
+        query = "SELECT * FROM devicetable"
         mycursor.execute(query)
         device_table = mycursor.fetchall()
 

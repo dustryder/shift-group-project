@@ -50,3 +50,7 @@ INSERT INTO device (device_name,device_type,os_type,os_version,ram,device_cpu,de
 ("Superman","Vive","VR",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ("Kuma","W8 Nokia","Windows",8.1,"500 MB","Dual-Core 1GHz",NULL,"480 x 800 (233ppi)","Low",NULL,NULL),
 ("Gun Jack","W8 Surface","Windows",NULL,"2 GB","Quad-Core 1.3GHz",NULL,"768 x 1366 (148ppi)","Low - Mid",NULL,NULL);
+
+SET SQL_SAFE_UPDATES = 0;
+UPDATE device
+SET acquisition_date = NOW() - INTERVAL FLOOR(RAND() * 360) DAY;
