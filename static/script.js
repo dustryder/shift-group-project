@@ -66,7 +66,7 @@ window.addEventListener('load', () => {
 
 	}
 
-
+	//Populates device history and info modal form
 	let tableRows = document.querySelectorAll('[hidden-device-id]');
 	tableRows.forEach(row => {
 		row.addEventListener('click', (event) => {
@@ -163,6 +163,32 @@ window.addEventListener('load', () => {
 
 				$('#deviceInfoModal').modal('show');
 			}
+		});
+	});
+
+
+	//Populates device loan modal form with device information and hidden identifiers
+	var submitButtons = document.querySelectorAll("button[data-target='#bookingModal']");
+	submitButtons.forEach(button => {
+		button.addEventListener('click', () => {
+
+			let data = button.value.split(',');
+			let employee_id = item.value.split(",")[0];
+			data.push(employee_id);
+			
+			let formItems = document.querySelectorAll("#borrowFormData input");
+
+			for(var i = 0; i < data.length; i++) {
+
+				let currentNode = formItems[i];
+
+				if (data[i] != "None") {
+					currentNode.value = data[i];
+				} else {
+					currentNode.value = "Unknown";
+				}
+			}
+
 		});
 	});
 

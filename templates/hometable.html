@@ -43,17 +43,17 @@
             {% if device[1]|string == employee_id|string %}
                 <td hidden-employee-id={{ device[1] }} hidden-name={{ device[4] }} hidden-date = {{ device[2]|string }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field+","+device[2]|string }}>Return</button></td>
             {% elif field == None %}
-                <td class="text-left"><button class="btn btn-block btn-success" type="submit" name="device_id" value={{ device[0]|string+",available" }}>Borrow</button></td>
+                <td class="text-left"><button data-toggle="modal" data-target="#bookingModal" class="btn btn-block btn-success" type="button" name="device_id" value="{{ [device[3], device[5], device[6], device[7], device[8], device[0]]|join(",") }}">Borrow</button></td>
             {% else %}
                 <td hidden-employee-id={{ device[1] }} hidden-name={{ device[4] }} hidden-date = {{ device[2]|string }} class="text-left">{{ field }}</td>
             {% endif %}
 
+        {% elif loop.index == 1 and device[0] in new_devices %}
+        <td class="text-left">{{ field }}-New</td>
+
         {% else %}
         <td class="text-left">{{ field }}</td>
         {% endif %}
-
-    {% else %}
-
     {% endfor %}
 </tr>
 {% endfor %}
@@ -102,4 +102,72 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+  
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookingLabel">Borrow a Device:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/loan-device" method="POST">
+         
+          <div class="form-group" id="borrowFormData">
+
+            <label for="deviceName">Device Name:</label>
+            <input type="text" id="deviceName" value="" readonly/>
+
+            <label for="deviceType">Device Type:</label>
+            <input type="text" id="deviceType" value="" readonly/>
+
+            <label for="deviceOS">Device OS:</label>
+            <input type="text" id="deviceOS" value="" readonly/>
+
+            <label for="deviceVersion">OS Version:</label>
+            <input type="text" id="deviceVersion" value="" readonly/>
+
+            <label for="deviceGrade">Device Grade:</label>
+            <input type="text" id="deviceGrade" value="" readonly/>
+
+            <label for="employeeName" class="sr-only">Device Id:</label>
+            <input type="hidden" id="deviceId" name="device_id" value=""/>
+            
+            <label for="employeeName" class="sr-only">Employee Name:</label>
+            <input type="hidden" id="employeeName" name="employee_id" value=""/>
+
+          </div>
+
+
+          <div class="form-group">
+            <label>Return Date:</label>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <div class="col">
+                  <input type="date" id="loan_end" required="required" name="loan_end">    
+                 </div>           
+                </div>
+              </div>
+            </div>
+          </div>
+         
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">Borrow</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 {% endblock %}

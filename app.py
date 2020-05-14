@@ -76,6 +76,22 @@ def close_db_connection(connection):
 def make_session_permanent():
    session.permanent = True 
 
+@app.route("/loan-device", methods = ['POST'])
+def loan():
+
+    connection = get_db_connection()
+    mycursor = connection.cursor()
+
+    device_id = request.form['device_id']
+    employee_id = request.form['employee_id']
+    loan_end = request.form['loan_end']
+
+    query = f"INSERT INTO deviceloan (device_id, employee_id, loan_start, loan_end) VALUE ({device_id}, {employee_id}, CURDATE(), '{loan_end}')"
+    mycursor.execute(query)
+    connection.commit()
+
+    return redirect("/")
+
 @app.route("/device-history", methods = ['GET', 'POST'])
 def history():
 
@@ -172,8 +188,12 @@ def home():
     query = "SELECT device_id FROM deviceloan WHERE returned_date IS NULL AND loan_end < NOW()"
     mycursor.execute(query)
     overdue_devices = [x[0] for x in mycursor.fetchall()]
+
+    query = "SELECT device_id FROM device WHERE acquisition_date BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()"
+    mycursor.execute(query)
+    new_devices = [x[0] for x in mycursor.fetchall()]
         
-    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id, overdue_devices=overdue_devices)
+    return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id, overdue_devices=overdue_devices, new_devices=new_devices)
         
 
 if (__name__) == ('__main__'):
