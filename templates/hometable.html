@@ -30,6 +30,7 @@
             <th>OS Version</th>
             <th>Device Grade</th>
             <th>Device Location</th>
+            <th>Age (days)</th>
         </tr>
     </thead> 
     
@@ -49,7 +50,7 @@
             {% endif %}
 
         {% elif loop.index == 1 and device[0] in new_devices %}
-        <td class="text-left">{{ field }}-New</td>
+        <td class="text-left" >{{ field }}-<p style="color:red">New</td>
 
         {% else %}
         <td class="text-left">{{ field }}</td>

@@ -133,17 +133,12 @@ def home():
         
         #add device location to homepage table, # add DeviceVault as default location for unassigned devices 
         query = "SELECT * FROM devicetable "
-
         mycursor.execute(query)
-        #mycursor.execute("SELECT device_id, device_name, first_name, device_type, os_type, os_version, grade FROM devicestatus ORDER BY device_id")
-        #add device location to homepage table
-        #mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
-
         device_table = mycursor.fetchall()
 
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()
-        
+
 
     except mysql.connector.Error as error:
         print("Error reading Device table {}".format(error))  
@@ -185,11 +180,13 @@ def home():
         mycursor.execute(query)
         permission = mycursor.fetchone()[0]
 
+
     query = "SELECT device_id FROM deviceloan WHERE returned_date IS NULL AND loan_end < NOW()"
     mycursor.execute(query)
     overdue_devices = [x[0] for x in mycursor.fetchall()]
 
-    query = "SELECT device_id FROM device WHERE acquisition_date BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()"
+    #add filter and flag for new devices
+    query = "SELECT device_id FROM device WHERE acquisition_date BETWEEN DATE_ADD(CURDATE(), INTERVAL -7 DAY) AND CURDATE() ORDER BY acquisition_date DESC"
     mycursor.execute(query)
     new_devices = [x[0] for x in mycursor.fetchall()]
         
