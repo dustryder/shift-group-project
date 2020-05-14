@@ -33,7 +33,7 @@
                           <a href="{{ url_for('home') }}" class="nav-link">Home</a>
                       </li>
                       <li class="nav-item {{ 'active' if active_page == 'new_item' else '' }}">
-                          <a href="/admin" class="nav-link">{% if permission >= 10 %}Admin{% endif %}</a>
+                          <a href="/admin/device" class="nav-link">{% if permission >= 10 %}Admin{% endif %}</a>
                       </li>
                   </ul>
               </div>
