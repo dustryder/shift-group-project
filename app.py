@@ -7,6 +7,7 @@
 
 from flask import Flask, render_template, request, session, redirect, jsonify
 import mysql.connector
+import datetime
 from mysql.connector import Error, errorcode
 from config_db import config, DATABASE_URI, SECRET_KEY
 from flask_admin import Admin
@@ -142,23 +143,19 @@ def home():
     if request.method == 'POST':
 
         device_id = request.form['device_id']
-        device_id, available = device_id.split(',')
+        device_id, available, loan_start = device_id.split(',')
         employee_id = request.form['employee_id']
         employee_id, employee_name, _ = employee_id.split(',')
         #Store the employee id of the person trying to borrow or return a device
         session['employee_id'] = employee_id
 
         if available != "available":
-            query = f"DELETE FROM deviceloan WHERE device_id = {device_id}"
+            query = f"UPDATE deviceloan SET returned_date = CURDATE() WHERE device_id = {device_id} AND loan_start = '{loan_start}'"
             mycursor.execute(query)
         else:
             query = f"INSERT INTO deviceloan (device_id, employee_id) VALUE ({device_id},{employee_id})"
             mycursor.execute(query)
         connection.commit()
-
-        #We are retrieving the devices/employees again to update the homepage with the changes we've made
-        #mycursor.execute("SELECT device.device_id, employee.employee_id, device_name, first_name, device_type, os_type, os_version, grade, location FROM device LEFT JOIN deviceloan on device.device_id = deviceloan.device_id LEFT JOIN employee on employee.employee_id = deviceloan.employee_id")
-        #device_table = mycursor.fetchall()
 
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()

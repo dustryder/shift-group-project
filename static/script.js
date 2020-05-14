@@ -31,9 +31,12 @@ window.addEventListener('load', () => {
 
 		for (var i = 0; i < status.length; i++ ) {
 
+			if (employeeId == status[i].getAttribute('hidden-employee-id')) {
 
-			if (employeeId === status[i].getAttribute('hidden-employee-id')) {
-				status[i].innerHTML = `<button class="btn btn-primary btn-block" type="submit" name="device_id" value=${employeeId + "," + item[1]}>Return</button>`
+				let startDate = status[i].getAttribute('hidden-date');
+				let deviceId = status[i].parentNode.getAttribute('hidden-device-id');
+
+				status[i].innerHTML = `<button class="btn btn-primary btn-block" type="submit" name="device_id" value=${deviceId + "," + item[1] + ',' + startDate}>Return</button>`
 			} else {
 				status[i].innerHTML = status[i].getAttribute('hidden-name');
 			}
@@ -79,7 +82,6 @@ window.addEventListener('load', () => {
 				  body: JSON.stringify(data)
 				}).then(response => response.json())
 				.then(data => {
-
 					let historyData = data[0];
 					let deviceData = data[1][0];
 					let employee_permission = item.value.split(",")[2];

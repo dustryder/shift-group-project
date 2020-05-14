@@ -22,30 +22,30 @@
 </div class="align-self-center" > 
 <table class= "table table-fixed">
     <thead class="thead-dark">
-	<tr>
-        <th>Device Name</th>
-        <th>Status</th>
-        <th>Device Type</th>
-        <th>OS Type</th>
-        <th>OS Version</th>
-        <th>Device Grade</th>
-        <th>Device Location</th>
-    </tr>
+    	  <tr>
+            <th>Device Name</th>
+            <th>Status</th>
+            <th>Device Type</th>
+            <th>OS Type</th>
+            <th>OS Version</th>
+            <th>Device Grade</th>
+            <th>Device Location</th>
+        </tr>
     </thead> 
     
     {% for device in device_table %}
     <tbody id="DeviceTable" class="table-hover">
     <tr hidden-device-id = {{ device[0] }} {% if device[0] in overdue_devices and permission >= 5 %} class="table-danger" {% endif %}>
-    {% for field in device[2:] %}
+    {% for field in device[3:] %}
 
         {% if loop.index == 2 %}
 
             {% if device[1]|string == employee_id|string %}
-                <td hidden-employee-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field }}>Return</button></td>
+                <td hidden-employee-id={{ device[1] }} hidden-name={{ device[4] }} hidden-date = {{ device[2]|string }} class="text-left"><button class="btn btn-primary btn-block" type="submit" name="device_id" value={{ device[0]|string+","+field+","+device[2]|string }}>Return</button></td>
             {% elif field == None %}
                 <td class="text-left"><button class="btn btn-block btn-success" type="submit" name="device_id" value={{ device[0]|string+",available" }}>Borrow</button></td>
             {% else %}
-                <td hidden-employee-id={{ device[1] }} hidden-name={{ device[3] }} class="text-left">{{ field }}</td>
+                <td hidden-employee-id={{ device[1] }} hidden-name={{ device[4] }} hidden-date = {{ device[2]|string }} class="text-left">{{ field }}</td>
             {% endif %}
 
         {% else %}
