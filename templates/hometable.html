@@ -19,10 +19,10 @@
 {% endfor %}
 </select>
 </div>
-</div class="align-self-center" > 
+</div class="align-self-center" >
 <table class= "table table-fixed">
     <thead class="thead-dark">
-    	  <tr>
+        <tr>
             <th>Device Name</th>
             <th>Status</th>
             <th>Device Type</th>
@@ -32,8 +32,8 @@
             <th>Device Location</th>
             <th>Age (days)</th>
         </tr>
-    </thead> 
-    
+    </thead>
+
     {% for device in device_table %}
     <tbody id="DeviceTable" class="table-hover">
     <tr hidden-device-id = {{ device[0] }} {% if device[0] in overdue_devices and permission >= 5 %} class="table-danger" {% endif %}>
@@ -73,7 +73,7 @@
       </div>
       <div class="modal-body">
         <ul id="deviceInformationBody">
-            
+
         </ul>
       </div>
       <div id="historyTableContainer">
@@ -82,18 +82,16 @@
       </div>
       <div class="modal-body">
           <table class="table">
-            <thead class="thead-dark">
-            <tr>
+            <thead class="thead-light">
                 <th>Device Name</th>
                 <th>Employee Name</th>
                 <th>Loan Start</th>
                 <th>Loan End</th>
                 <th>Date Returned</th>
-            </tr>
-            </thead> 
+                </thead>
             <tbody class="table-hover" id="historyTableBody">
             </tbody>
-              
+
           </table>
       </div>
       </div>
@@ -105,8 +103,9 @@
 </div>
 
 <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-  
+  <div class="modal-dialog modal-md" role="document">
+
+
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="bookingLabel">Borrow a Device:</h5>
@@ -114,61 +113,59 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form action="/loan-device" method="POST">
-         
-          <div class="form-group" id="borrowFormData">
+        <div class="modal-body">
+        <form class="form-horizontal" action="/loan-device" method="POST">
+        <div class="form-group" id="borrowFormData">
+            <label class= "col-sm-4" for="deviceName">Device Name:</label>
+          <input type="text" id="deviceName" value="" readonly/><br>
+          </div>
 
-            <label for="deviceName">Device Name:</label>
-            <input type="text" id="deviceName" value="" readonly/>
+        <div class="form-group" id="borrowFormData">
+        <label class= "col-sm-4" for="deviceType">Device Type:</label>
+          <input type="text" id="deviceType" value="" readonly/><br>
+          </div>
 
-            <label for="deviceType">Device Type:</label>
-            <input type="text" id="deviceType" value="" readonly/>
+        <div class="form-group" id="borrowFormData">
+        <label class= "col-sm-4" for="deviceOS">Device OS:</label>
 
-            <label for="deviceOS">Device OS:</label>
-            <input type="text" id="deviceOS" value="" readonly/>
+          <input type="text" id="deviceOS" value="" readonly/><br>
+          </div>
 
-            <label for="deviceVersion">OS Version:</label>
-            <input type="text" id="deviceVersion" value="" readonly/>
+        <div class="form-group" id="borrowFormData">
+      <label class= "col-sm-4" for="deviceVersion">OS Version:</label>
+          <input type="text" id="deviceVersion" value="" readonly/><br>
+          </div>
 
-            <label for="deviceGrade">Device Grade:</label>
-            <input type="text" id="deviceGrade" value="" readonly/>
+        <div class="form-group" id="borrowFormData">
+      <label class= "col-sm-4" for="deviceGrade">Device Grade:</label>
+          <input type="text" id="deviceGrade" value="" readonly/><br>
+          </div>
 
             <label for="employeeName" class="sr-only">Device Id:</label>
             <input type="hidden" id="deviceId" name="device_id" value=""/>
-            
             <label for="employeeName" class="sr-only">Employee Name:</label>
             <input type="hidden" id="employeeName" name="employee_id" value=""/>
-
           </div>
 
-
           <div class="form-group">
-            <label>Return Date:</label>
+
+            <label class= "col-sm-4" for="loan_end">Return Date:</label>
             <div class="container">
               <div class="row">
                 <div class="col">
-                  <div class="col">
-                  <input type="date" id="loan_end" required="required" name="loan_end">    
-                 </div>           
-                </div>
-              </div>
-            </div>
-          </div>
-         
+                 <input type="date" id="loan_end" required="required" name="loan_end"><br><br>
           <div class="form-group">
+
             <button class="btn btn-primary" type="submit">Borrow</button>
-          </div>
 
-        </form>
-      </div>
-
+</form>
+</div>
+  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
-
-    </div>
-  </div>
+      </div>
+      </div>
 </div>
 
 {% endblock %}
