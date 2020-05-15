@@ -172,12 +172,13 @@ window.addEventListener('load', () => {
 	submitButtons.forEach(button => {
 		button.addEventListener('click', () => {
 
+
+
 			let data = button.value.split(',');
 			let employee_id = item.value.split(",")[0];
 			data.push(employee_id);
 			
-			let formItems = document.querySelectorAll("#borrowFormData input");
-
+			let formItems = document.querySelectorAll("form[action='/loan-device'] input");
 			for(var i = 0; i < data.length; i++) {
 
 				let currentNode = formItems[i];
