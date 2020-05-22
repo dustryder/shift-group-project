@@ -7,14 +7,11 @@
 
 from flask import Flask, render_template, request, session, redirect, jsonify
 import mysql.connector
-import datetime
-from mysql.connector import Error, errorcode
 from config_db import config, DATABASE_URI, SECRET_KEY
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin.contrib.sqla import ModelView
 
-from flask import Flask
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 admin = Admin(app, base_template='layout.html', template_mode='bootstrap3')
@@ -49,10 +46,28 @@ class Employee(db.Model):
     location = db.Column(db.Enum('Office 1', 'Office 2'))
     permissions = db.Column(db.INTEGER)
 
-admin.add_view(ModelView(Device, db.session))
-admin.add_view(ModelView(Employee, db.session))
+class RestrictedView(ModelView):
 
-#secret key needed for securely signing the session cookie.
+    def is_accessible(self):
+
+        connection = get_db_connection()
+        mycursor = connection.cursor()
+
+        employee_id = session['employee_id']
+        query = f"SELECT permissions FROM employee where employee_id = {employee_id}"
+
+        mycursor.execute(query)
+        permission = mycursor.fetchone()[0]
+
+        return permission >= 10
+
+    def inaccessible_callback(self, name, **kwargs):
+
+        return redirect("/")
+
+admin.add_view(RestrictedView(Device, db.session))
+admin.add_view(RestrictedView(Employee, db.session))
+
 
 #Function for get Database connection
 def get_db_connection():
@@ -63,7 +78,7 @@ def get_db_connection():
     except mysql.connector.Error as error :
         print("Failed to connect to database {}".format(error))
 
-#Function  for Close Database connection        
+#Function  for Close Database connection
 def close_db_connection(connection):
     """Close Database connection"""
     try:
@@ -71,10 +86,10 @@ def close_db_connection(connection):
     except mysql.connector.Error as error :
         print("Failed to close database connection {}".format(error))
 
-#session functions to remember user; still needs work
+#session functions to remember user;
 @app.before_request
 def make_session_permanent():
-   session.permanent = True 
+   session.permanent = True
 
 @app.route("/loan-device", methods = ['POST'])
 def loan():
@@ -89,6 +104,7 @@ def loan():
     query = f"INSERT INTO deviceloan (device_id, employee_id, loan_start, loan_end) VALUE ({device_id}, {employee_id}, CURDATE(), '{loan_end}')"
     mycursor.execute(query)
     connection.commit()
+    connection.close()
 
     return redirect("/")
 
@@ -107,6 +123,7 @@ def history():
 
         history = mycursor.fetchall()
         history = [attribute[1:] for attribute in history]
+
 
         query = f"SELECT * FROM deviceinfo WHERE device_id = %s"
         mycursor.execute(query, (device_id,))
@@ -130,8 +147,8 @@ def home():
     try:
         connection = get_db_connection()
         mycursor = connection.cursor()
-        
-        #add device location to homepage table, # add DeviceVault as default location for unassigned devices 
+
+        #add device location to homepage table, # add DeviceVault as default location for unassigned devices
         query = "SELECT * FROM devicetable "
         mycursor.execute(query)
         device_table = mycursor.fetchall()
@@ -141,7 +158,7 @@ def home():
 
 
     except mysql.connector.Error as error:
-        print("Error reading Device table {}".format(error))  
+        print("Error reading Device table {}".format(error))
 
     #Try to retrieve stored employee_id from session. If one has not been stored, return the employee id of a known plebeian
     employee_id = session.get('employee_id', 1)
@@ -160,6 +177,7 @@ def home():
         #Store the employee id of the person trying to borrow or return a device
         session['employee_id'] = employee_id
 
+        #Legacy code to maintain compatibility with current version
         if available != "available":
             query = f"UPDATE deviceloan SET returned_date = CURDATE() WHERE device_id = {device_id} AND loan_start = '{loan_start}'"
             mycursor.execute(query)
@@ -171,7 +189,7 @@ def home():
         mycursor.execute("SELECT employee_id, first_name, permissions FROM employee")
         employees = mycursor.fetchall()
 
-        #add device location, DeviceVault as default location for unassigned devices 
+        #add device location, DeviceVault as default location for unassigned devices
         query = "SELECT * FROM devicetable"
         mycursor.execute(query)
         device_table = mycursor.fetchall()
@@ -189,9 +207,9 @@ def home():
     query = "SELECT device_id FROM device WHERE acquisition_date BETWEEN DATE_ADD(CURDATE(), INTERVAL -7 DAY) AND CURDATE() ORDER BY acquisition_date DESC"
     mycursor.execute(query)
     new_devices = [x[0] for x in mycursor.fetchall()]
-        
+
     return render_template('hometable.html',device_table=device_table, employees=employees, permission=permission, employee_id=employee_id, overdue_devices=overdue_devices, new_devices=new_devices)
-        
+
 
 if (__name__) == ('__main__'):
     app.run(debug=True)

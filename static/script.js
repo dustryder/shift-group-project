@@ -29,6 +29,7 @@ window.addEventListener('load', () => {
 
 		let employeeId = item[0];
 
+        //Update buttons on main table
 		for (var i = 0; i < status.length; i++ ) {
 
 			if (employeeId == status[i].getAttribute('hidden-employee-id')) {
@@ -42,14 +43,15 @@ window.addEventListener('load', () => {
 			}
 		}
 
-
+        //Post new employee to backend
 		let data = {'employee_id': item[0]};
 
 		fetch("/login", {
-		  method: "POST", 
+		  method: "POST",
 		  body: JSON.stringify(data)
 		});
 
+        //Add colour to overdue devices
 		if (employee_permission >= 5) {
 
 			for (var i = 0; i < overdue_devices.length; i++) {
@@ -78,7 +80,7 @@ window.addEventListener('load', () => {
 				let data = {'device_id': device_id};
 
 				fetch("/device-history", {
-				  method: "POST", 
+				  method: "POST",
 				  body: JSON.stringify(data)
 				}).then(response => response.json())
 				.then(data => {
@@ -167,7 +169,7 @@ window.addEventListener('load', () => {
 	});
 
 
-	//Populates device loan modal form with device information and hidden identifiers
+	//Populates device loan modal form fixed inputs with device information and hidden identifiers
 	var submitButtons = document.querySelectorAll("button[data-target='#bookingModal']");
 	submitButtons.forEach(button => {
 		button.addEventListener('click', () => {
@@ -177,7 +179,7 @@ window.addEventListener('load', () => {
 			let data = button.value.split(',');
 			let employee_id = item.value.split(",")[0];
 			data.push(employee_id);
-			
+
 			let formItems = document.querySelectorAll("form[action='/loan-device'] input");
 			for(var i = 0; i < data.length; i++) {
 
@@ -191,6 +193,13 @@ window.addEventListener('load', () => {
 			}
 
 		});
+	});
+
+	var calendarInput = document.querySelector('#loan_end');
+	var now = moment().format('YYYY-MM-DD');
+
+	calendarInput.addEventListener("click", () => {
+	    calendarInput.setAttribute("min", now);
 	});
 
 });
