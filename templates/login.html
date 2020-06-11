@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+
+{% block head -%}
+
+<head>
+
+    <title>Player Login</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"><
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/b-1.6.1/sp-1.0.1/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/loginstyle.css') }}">
+
+ <!--   <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script> -->      
+	
+</head>
+
+{%- endblock %}
+
+{% block body %}
+
+<body>
+
+    <div class="flex container" style="max-width:775px">
+        <div class="w3-content w3-container">
+
+            
+            {%- if error_message !='' %}
+            <div id="alertMessage" class="alert alert-danger" {% if error_message is not defined %}
+                style="display: none;" {% endif %}>
+                <h5>{{ error_message }} Please try again.</h5>
+			</div>
+            </div>
+
+
+            {%- else -%}
+            
+            {%- endif %}
+
+            <div class="flex container contact-form" style="max-width:350px">
+                <div class="w3-content w3-container">
+						
+                    <form action="{{ url_for('login') }}" form method="POST">
+                        <br>
+						<br>
+                        <form class="border border-light p-5">
+                            <p>
+
+                            <h4 style="color:#4c93b1;" class="mb-4 text-center">
+                                LOGIN</h4>
+                            </p>
+
+                            <input type="email" id="Email" name="Email" class="form-control mb-4" placeholder="E-mail">
+
+                            <input type="password" id="Password" name="Password" class="form-control mb-4"
+                                placeholder="Password">
+
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                        <label class="custom-control-label" for="rememberMe">Remember Me</label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="/forgot_password">Forgot password</a>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button class="btn btn-block my-4" type="submit">LOGIN</button>
+
+                                <div class="text-center">
+                                    
+                                    <p>Not yet Registered?
+                                        <a href="register">Register</a>
+                                    </p>
+                                    <p>Return
+                                        <a href="index">Home</a>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
